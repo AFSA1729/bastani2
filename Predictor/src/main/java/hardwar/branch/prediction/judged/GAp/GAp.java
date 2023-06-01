@@ -16,30 +16,34 @@ public class GAp implements BranchPredictor {
     }
 
     /**
-     * Creates a new GAp predictor with the given BHR register size and initializes the PAPHT based on
+     * Creates a new GAp predictor with the given BHR register size and initializes
+     * the PAPHT based on
      * the branch instruction length and saturating counter size
      *
      * @param BHRSize               the size of the BHR register
-     * @param SCSize                the size of the register which hold the saturating counter value
-     * @param branchInstructionSize the number of bits which is used for saving a branch instruction
+     * @param SCSize                the size of the register which hold the
+     *                              saturating counter value
+     * @param branchInstructionSize the number of bits which is used for saving a
+     *                              branch instruction
      */
     public GAp(int BHRSize, int SCSize, int branchInstructionSize) {
-        // TODO: complete the constructor
-        this.branchInstructionSize = 0;
+        this.branchInstructionSize = branchInstructionSize;
 
         // Initialize the BHR register with the given size and no default value
-        this.BHR = null;
+        this.BHR = new SIPORegister("BHR", BHRSize, null);
 
-        // Initializing the PAPHT with BranchInstructionSize as PHT Selector and 2^BHRSize row as each PHT entries
+        // Initializing the PAPHT with BranchInstructionSize as PHT Selector and
+        // 2^BHRSize row as each PHT entries
         // number and SCSize as block size
-        PAPHT = null;
+        PAPHT = new PerAddressPredictionHistoryTable(branchInstructionSize, 1 << BHRSize, SCSize);
 
         // Initialize the SC register
-        SC = null;
+        SC = new SIPORegister("SC", SCSize, null);;
     }
 
     /**
-     * predicts the result of a branch instruction based on the global branch history and branch address
+     * predicts the result of a branch instruction based on the global branch
+     * history and branch address
      *
      * @param branchInstruction the branch instruction
      * @return the predicted outcome of the branch instruction (taken or not taken)
@@ -60,7 +64,6 @@ public class GAp implements BranchPredictor {
     public void update(BranchInstruction branchInstruction, BranchResult actual) {
         // TODO : complete Task 2
     }
-
 
     /**
      * concat the branch address and BHR to retrieve the desired address
