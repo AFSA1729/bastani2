@@ -21,7 +21,7 @@ public class GAg implements BranchPredictor {
      * @param SCSize  the size of the register which hold the saturating counter value and the cache block size
      */
     public GAg(int BHRSize, int SCSize) {
-        // TODO : complete the constructor
+        int x = 2;
         // Initialize the BHR register with the given size and no default value
         this.BHR = new SIPORegister("BHR",BHRSize,null);
 
