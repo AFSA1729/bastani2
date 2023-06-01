@@ -1,4 +1,4 @@
-Thu Jun  1 13:30:29 UTC 2023
+Thu Jun  1 13:37:58 UTC 2023
 GAg: 
 Test passed, 1000 out of 1000 assertions passed
 
@@ -8,20 +8,9 @@ Test passed, 1000 out of 1000 assertions passed
 GAs: 
 Exception in thread "main" hardwar.branch.prediction.judge.TestFailedException: Test failed, 203 out of 1000 assertions passed
 	at hardwar.branch.prediction.judge.Judge.main(Judge.java:39)
-Exception in thread "main" java.lang.IllegalArgumentException: registerValue size is not as same as register size
-	at hardwar.branch.prediction.shared.devices.RegisterBank.write(RegisterBank.java:78)
-	at hardwar.branch.prediction.judged.PAg.PAg.update(PAg.java:72)
-	at hardwar.branch.prediction.judge.PredictorSimulator.lambda$simulate$0(PredictorSimulator.java:28)
-	at java.base/java.util.stream.IntPipeline$1$1.accept(IntPipeline.java:180)
-	at java.base/java.util.stream.Streams$RangeIntSpliterator.forEachRemaining(Streams.java:104)
-	at java.base/java.util.Spliterator$OfInt.forEachRemaining(Spliterator.java:711)
-	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
-	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
-	at java.base/java.util.stream.ReduceOps$ReduceOp.evaluateSequential(ReduceOps.java:921)
-	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-	at java.base/java.util.stream.ReferencePipeline.collect(ReferencePipeline.java:682)
-	at hardwar.branch.prediction.judge.PredictorSimulator.simulate(PredictorSimulator.java:30)
-	at hardwar.branch.prediction.judge.Judge.main(Judge.java:32)
+PAg: 
+Test passed, 1000 out of 1000 assertions passed
+
 PAp: 
 Exception in thread "main" hardwar.branch.prediction.judge.TestFailedException: Test failed, 260 out of 1000 assertions passed
 	at hardwar.branch.prediction.judge.Judge.main(Judge.java:39)
