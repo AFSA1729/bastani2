@@ -9,7 +9,6 @@ public class PAg implements BranchPredictor {
     private final ShiftRegister SC; // saturating counter register
     private final RegisterBank PABHR; // per address branch history register
     private final Cache<Bit[], Bit[]> PHT; // page history table
-
     public PAg() {
         this(4, 2, 8);
     }
@@ -25,13 +24,14 @@ public class PAg implements BranchPredictor {
     public PAg(int BHRSize, int SCSize, int branchInstructionSize) {
         // TODO: complete the constructor
         // Initialize the PABHR with the given bhr and branch instruction size
-        PABHR = null;
+        PABHR = new RegisterBank(1<<branchInstructionSize, BHRSize);
 
         // Initialize the PHT with a size of 2^size and each entry having a saturating counter of size "SCSize"
-        PHT = null;
+        PHT = new PageHistoryTable(1<<BHRSize, SCSize);
 
         // Initialize the SC register
-        SC = null;
+        SC = new SIPORegister("SC", SCSize, null);
+        this.scSize = SCSize;
     }
 
     /**
@@ -40,7 +40,12 @@ public class PAg implements BranchPredictor {
      */
     @Override
     public BranchResult predict(BranchInstruction instruction) {
-        // TODO: complete Task 1
+        Bit[] bits = new Bit[this.scSize]; //todo update bits to false
+        PHT.putIfAbsent(instruction.getInstructionAddress(), bits);
+        Bit[] bits2 = PHT.get(instruction.getInstructionAddress());
+        if(bits2[0].getValue()){
+            return BranchResult.TAKEN;
+        }
         return BranchResult.NOT_TAKEN;
     }
 
@@ -51,6 +56,12 @@ public class PAg implements BranchPredictor {
     @Override
     public void update(BranchInstruction instruction, BranchResult actual) {
         // TODO: complete Task 2
+        Bit[] bits = getDefaultBlock();
+        PHT.putIfAbsent(instruction.getInstructionAddress(), bits);
+        Bit[] bits2 = PHT.get(instruction.getInstructionAddress());
+        SC.load(bits2);
+        Bit bit;
+        SC.insert();
     }
 
     /**

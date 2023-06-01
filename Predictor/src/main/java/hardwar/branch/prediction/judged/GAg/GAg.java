@@ -27,10 +27,10 @@ public class GAg implements BranchPredictor {
 
         // Initialize the PHT with a size of 2^size and each entry having a saturating counter of size "SCSize"
         
-        PHT = new PageHistoryTable(1<<BHRSize, SCSize);
-
+        this.PHT = new PageHistoryTable(1<<BHRSize, SCSize);
+        
         // Initialize the SC register
-        SC = new SIPORegister("SC", SCSize, null);
+        this.SC = new SIPORegister("SC", SCSize, null);
     }
 
     /**
@@ -43,6 +43,7 @@ public class GAg implements BranchPredictor {
     public BranchResult predict(BranchInstruction branchInstruction) {
         // TODO : complete Task 1
         
+        this.PHT.putIfAbsent(this.BHR.read(),getDefaultBlock());
         this.SC.load(this.PHT.get(this.BHR.read()));
         return BranchResult.of(this.SC.read()[0].getValue());
     }
