@@ -31,7 +31,6 @@ public class PAg implements BranchPredictor {
 
         // Initialize the SC register
         SC = new SIPORegister("SC", SCSize, null);
-        this.scSize = SCSize;
     }
 
     /**
@@ -40,10 +39,10 @@ public class PAg implements BranchPredictor {
      */
     @Override
     public BranchResult predict(BranchInstruction instruction) {
-        Bit[] bits = new Bit[this.scSize]; //todo update bits to false
-        PHT.putIfAbsent(instruction.getInstructionAddress(), bits);
-        Bit[] bits2 = PHT.get(instruction.getInstructionAddress());
-        if(bits2[0].getValue()){
+        ShiftRegister shiftRegister = PABHR.read(instruction.getInstructionAddress());
+        PHT.putIfAbsent(shiftRegister.read(), getDefaultBlock());
+        Bit[] bits = PHT.get(shiftRegister.read());
+        if(bits[0].getValue()){
             return BranchResult.TAKEN;
         }
         return BranchResult.NOT_TAKEN;
@@ -56,12 +55,21 @@ public class PAg implements BranchPredictor {
     @Override
     public void update(BranchInstruction instruction, BranchResult actual) {
         // TODO: complete Task 2
-        Bit[] bits = getDefaultBlock();
-        PHT.putIfAbsent(instruction.getInstructionAddress(), bits);
-        Bit[] bits2 = PHT.get(instruction.getInstructionAddress());
-        SC.load(bits2);
-        Bit bit;
-        SC.insert();
+        ShiftRegister shiftRegister = PABHR.read(instruction.getInstructionAddress());
+        PHT.putIfAbsent(shiftRegister.read(), getDefaultBlock());
+        Bit[] bits = PHT.get(shiftRegister.read());
+        Bit[] result;
+        if(BranchResult.isTaken(actual)){
+            result = CombinationalLogic.count(bits, true, CountMode.SATURATING);
+        }else{
+            result = CombinationalLogic.count(bits, false, CountMode.SATURATING);
+        }
+        PHT.put(shiftRegister.read(), result);
+        if(BranchResult.isTaken(actual))
+        shiftRegister.insert(Bit.ONE);
+        else
+        shiftRegister.insert(Bit.ZERO);
+        PABHR.write(instruction.getInstructionAddress(), result);
     }
 
     /**
