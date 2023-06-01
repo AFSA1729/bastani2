@@ -1,6 +1,5 @@
 package hardwar.branch.prediction.judged.PAp;
 
-
 import hardwar.branch.prediction.shared.*;
 import hardwar.branch.prediction.shared.devices.*;
 
@@ -21,23 +20,26 @@ public class PAp implements BranchPredictor {
     }
 
     public PAp(int BHRSize, int SCSize, int branchInstructionSize) {
-        // TODO: complete the constructor
         this.branchInstructionSize = branchInstructionSize;
 
         // Initialize the PABHR with the given bhr and branch instruction size
-        PABHR = null;
+        PABHR = new RegisterBank(branchInstructionSize, BHRSize);
 
-        // Initializing the PAPHT with BranchInstructionSize as PHT Selector and 2^BHRSize row as each PHT entries
+        // Initializing the PAPHT with BranchInstructionSize as PHT Selector and
+        // 2^BHRSize row as each PHT entries
         // number and SCSize as block size
-        PAPHT = null;
+        PAPHT = new PerAddressPredictionHistoryTable(branchInstructionSize, 1 << BHRSize, SCSize);
 
         // Initialize the SC register
-        SC = null;
+        SC = new SIPORegister("SC", SCSize, null);
     }
 
     @Override
     public BranchResult predict(BranchInstruction branchInstruction) {
         // TODO: complete Task 1
+        this.PAPHT.putIfAbsent(getCacheEntry(branchInstruction.getInstructionAddress(), branchInstruction.getInstructionAddress()), getDefaultBlock());
+        this.SC.load(this.PAPHT.get(getCacheEntry(branchInstruction.getInstructionAddress())));
+        return BranchResult.of(this.SC.read()[0].getValue());
         return BranchResult.NOT_TAKEN;
     }
 
@@ -45,7 +47,6 @@ public class PAp implements BranchPredictor {
     public void update(BranchInstruction instruction, BranchResult actual) {
         // TODO:complete Task 2
     }
-
 
     private Bit[] getCacheEntry(Bit[] branchAddress, Bit[] BHRValue) {
         // Concatenate the branch address bits with the BHR bits
