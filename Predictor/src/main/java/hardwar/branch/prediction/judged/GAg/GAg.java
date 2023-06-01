@@ -21,7 +21,6 @@ public class GAg implements BranchPredictor {
      * @param SCSize  the size of the register which hold the saturating counter value and the cache block size
      */
     public GAg(int BHRSize, int SCSize) {
-        // TODO : complete the constructor
         // Initialize the BHR register with the given size and no default value
         this.BHR = new SIPORegister("BHR",BHRSize,null);
 
@@ -41,8 +40,6 @@ public class GAg implements BranchPredictor {
      */
     @Override
     public BranchResult predict(BranchInstruction branchInstruction) {
-        // TODO : complete Task 1
-        
         this.PHT.putIfAbsent(this.BHR.read(),getDefaultBlock());
         this.SC.load(this.PHT.get(this.BHR.read()));
         return BranchResult.of(this.SC.read()[0].getValue());
@@ -56,8 +53,6 @@ public class GAg implements BranchPredictor {
      */
     @Override
     public void update(BranchInstruction instruction, BranchResult actual) {
-        // TODO: complete Task 2
-
         this.PHT.put(this.BHR.read(),CombinationalLogic.count(this.SC.read(), BranchResult.isTaken(actual), CountMode.SATURATING));
         this.BHR.insert(Bit.of(BranchResult.isTaken(actual)));
     }

@@ -38,7 +38,8 @@ public class GAp implements BranchPredictor {
         PAPHT = new PerAddressPredictionHistoryTable(branchInstructionSize, 1 << BHRSize, SCSize);
 
         // Initialize the SC register
-        SC = new SIPORegister("SC", SCSize, null);;
+        SC = new SIPORegister("SC", SCSize, null);
+        ;
     }
 
     /**
@@ -64,6 +65,9 @@ public class GAp implements BranchPredictor {
     @Override
     public void update(BranchInstruction branchInstruction, BranchResult actual) {
         // TODO : complete Task 2
+        this.PAPHT.put(getCacheEntry(branchInstruction.getInstructionAddress()),
+                CombinationalLogic.count(this.SC.read(), BranchResult.isTaken(actual), CountMode.SATURATING));
+        this.BHR.insert(Bit.of(BranchResult.isTaken(actual)));
     }
 
     /**
