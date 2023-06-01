@@ -69,7 +69,7 @@ public class PAg implements BranchPredictor {
         shiftRegister.insert(Bit.ONE);
         else
         shiftRegister.insert(Bit.ZERO);
-        PABHR.write(instruction.getInstructionAddress(), result);
+        PABHR.write(instruction.getInstructionAddress(), shiftRegister.read());
     }
 
     /**
