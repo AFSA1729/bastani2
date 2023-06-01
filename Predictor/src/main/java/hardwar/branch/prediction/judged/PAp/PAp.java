@@ -36,16 +36,23 @@ public class PAp implements BranchPredictor {
 
     @Override
     public BranchResult predict(BranchInstruction branchInstruction) {
-        // TODO: complete Task 1
-        this.PAPHT.putIfAbsent(getCacheEntry(branchInstruction.getInstructionAddress(), branchInstruction.getInstructionAddress()), getDefaultBlock());
-        this.SC.load(this.PAPHT.get(getCacheEntry(branchInstruction.getInstructionAddress())));
+        ShiftRegister shiftRegister = PABHR.read(branchInstruction.getInstructionAddress());
+        this.PAPHT.putIfAbsent(getCacheEntry(branchInstruction.getInstructionAddress(), shiftRegister.read()),
+                getDefaultBlock());
+        this.SC.load(this.PAPHT.get(getCacheEntry(branchInstruction.getInstructionAddress(), shiftRegister.read())));
         return BranchResult.of(this.SC.read()[0].getValue());
-        return BranchResult.NOT_TAKEN;
     }
 
     @Override
     public void update(BranchInstruction instruction, BranchResult actual) {
-        // TODO:complete Task 2
+        ShiftRegister shiftRegister = PABHR.read(instruction.getInstructionAddress());
+        this.PAPHT.put(getCacheEntry(instruction.getInstructionAddress(), shiftRegister.read()),
+                CombinationalLogic.count(this.SC.read(), BranchResult.isTaken(actual), CountMode.SATURATING));
+        if (BranchResult.isTaken(actual))
+            shiftRegister.insert(Bit.ONE);
+        else
+            shiftRegister.insert(Bit.ZERO);
+        PABHR.write(instruction.getInstructionAddress(), shiftRegister.read());
     }
 
     private Bit[] getCacheEntry(Bit[] branchAddress, Bit[] BHRValue) {
