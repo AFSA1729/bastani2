@@ -1,8 +1,16 @@
-Thu Jun  1 12:15:19 UTC 2023
-Exception in thread "main" java.lang.NullPointerException
-	at java.base/java.lang.System.arraycopy(Native Method)
-	at hardwar.branch.prediction.shared.devices.SIPORegister.load(SIPORegister.java:65)
-	at hardwar.branch.prediction.judged.GAg.GAg.predict(GAg.java:46)
+Thu Jun  1 13:25:44 UTC 2023
+GAg: 
+Test passed, 1000 out of 1000 assertions passed
+
+GAp: 
+Test passed, 1000 out of 1000 assertions passed
+
+GAs: 
+Exception in thread "main" hardwar.branch.prediction.judge.TestFailedException: Test failed, 203 out of 1000 assertions passed
+	at hardwar.branch.prediction.judge.Judge.main(Judge.java:39)
+Exception in thread "main" java.lang.IllegalArgumentException: register bank selector is not valid
+	at hardwar.branch.prediction.shared.devices.RegisterBank.read(RegisterBank.java:52)
+	at hardwar.branch.prediction.judged.PAg.PAg.predict(PAg.java:42)
 	at hardwar.branch.prediction.judge.PredictorSimulator.lambda$simulate$0(PredictorSimulator.java:27)
 	at java.base/java.util.stream.IntPipeline$1$1.accept(IntPipeline.java:180)
 	at java.base/java.util.stream.Streams$RangeIntSpliterator.forEachRemaining(Streams.java:104)
@@ -14,15 +22,6 @@ Exception in thread "main" java.lang.NullPointerException
 	at java.base/java.util.stream.ReferencePipeline.collect(ReferencePipeline.java:682)
 	at hardwar.branch.prediction.judge.PredictorSimulator.simulate(PredictorSimulator.java:30)
 	at hardwar.branch.prediction.judge.Judge.main(Judge.java:32)
-GAp: 
-Exception in thread "main" hardwar.branch.prediction.judge.TestFailedException: Test failed, 287 out of 1000 assertions passed
-	at hardwar.branch.prediction.judge.Judge.main(Judge.java:39)
-GAs: 
-Exception in thread "main" hardwar.branch.prediction.judge.TestFailedException: Test failed, 203 out of 1000 assertions passed
-	at hardwar.branch.prediction.judge.Judge.main(Judge.java:39)
-PAg: 
-Exception in thread "main" hardwar.branch.prediction.judge.TestFailedException: Test failed, 102 out of 1000 assertions passed
-	at hardwar.branch.prediction.judge.Judge.main(Judge.java:39)
 PAp: 
 Exception in thread "main" hardwar.branch.prediction.judge.TestFailedException: Test failed, 260 out of 1000 assertions passed
 	at hardwar.branch.prediction.judge.Judge.main(Judge.java:39)
