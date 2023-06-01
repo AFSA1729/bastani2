@@ -29,19 +29,19 @@ public class GAs implements BranchPredictor {
      */
     public GAs(int BHRSize, int SCSize, int branchInstructionSize, int KSize, HashMode hashmode) {
         // TODO: complete the constructor
-        this.branchInstructionSize = 0;
-        this.KSize = 0;
+        this.branchInstructionSize = branchInstructionSize;
+        this.KSize = KSize;
         this.hashMode = HashMode.XOR;
 
         // Initialize the BHR register with the given size and no default value
-        BHR = null;
+        this.BHR = new SIPORegister("BHR",BHRSize,null);
 
         // Initializing the PAPHT with K bit as PHT selector and 2^BHRSize row as each PHT entries
         // number and SCSize as block size
-        PSPHT = null;
+        this.PSPHT = new PerAddressPredictionHistoryTable(KSize, 1<<BHRSize, SCSize);
 
         // Initialize the saturating counter
-        SC = null;
+        this.SC = new SIPORegister("SC", SCSize, null);
     }
 
     /**
@@ -54,7 +54,11 @@ public class GAs implements BranchPredictor {
     @Override
     public BranchResult predict(BranchInstruction branchInstruction) {
         // TODO: complete Task 1
-        return BranchResult.NOT_TAKEN;
+
+        
+        PSPHT.putIfAbsent(getCacheEntry(branchInstruction.getInstructionAddress()), getDefaultBlock());
+        this.SC.load(this.PSPHT.get(getCacheEntry(branchInstruction.getInstructionAddress())));
+        return BranchResult.of(this.SC.read()[0].getValue());
     }
 
     /**
@@ -65,6 +69,9 @@ public class GAs implements BranchPredictor {
      */
     @Override
     public void update(BranchInstruction branchInstruction, BranchResult actual) {
+        this.PSPHT.put(getCacheEntry(branchInstruction.getInstructionAddress()),
+                CombinationalLogic.count(this.SC.read(), BranchResult.isTaken(actual), CountMode.SATURATING));
+        this.BHR.insert(Bit.of(BranchResult.isTaken(actual)));
         // TODO: complete Task 2
     }
 
@@ -101,3 +108,4 @@ public class GAs implements BranchPredictor {
         return defaultBlock;
     }
 }
+
